@@ -1,0 +1,101 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp"/>
+<title>详细信息</title>
+<link rel="stylesheet" href="{:CS_PATH}base.css" />
+</head>
+<body>
+<div class="calendar_ad"><img src="{:IM_PATH}sign_calendar_ads.png"/></div>	
+
+<div class="sign_calendar">
+	<div class="calendar_box">
+		<div class="calendar_hd">
+			<div class="prev_month"><i></i></div>
+			<div class="datetime">2016年9月</div>
+			<div class="next_month"><i></i></div>
+		</div>
+		<ul class="calendar_weeks">
+			<li>S</li>
+			<li>M</li>
+			<li>T</li>
+			<li>W</li>
+			<li>T</li>
+			<li>F</li>
+			<li>S</li>
+		</ul>
+		<ul class="calendar_days"></ul>
+	</div>
+</div>
+
+
+</body>
+<script src="{:JS_PATH}jquery-2.1.4.js" type="text/javascript" charset="utf-8"></script>
+<script src="{:JS_PATH}app.js" type="text/javascript" charset="utf-8"></script>
+<script src="{:JS_PATH}calendar.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+$(function(){
+		
+	//日历模块调用 初始化
+	var arr ={$arr};//未打开日，请假日
+	calendar.nowDate();
+	calendar.renderHtml(arr);
+	
+	//监听天数点击，获取日期 datetime
+	$(".calendar_box").on("click",".calendar_days li",function() {
+		//如果是未签到状态，禁止点击事件
+		if(!$(this).hasClass("sign")) return false;
+		var datetime = $(this).attr("data-date");
+		//console.log("点击获取的时间："+datetime);
+		var url ="{$url}clickTime/"+datetime;
+		window.location.href=url; 
+	});
+	//下个月
+	$(".calendar_hd .next_month").on("click",function() {
+		calendar.nextMonth(arr);
+		//console.log("下个月的年月："+calendar.getYearAndMonth());	
+		sendAjax();
+	});
+	//上个月
+	$(".calendar_hd .prev_month").on("click",function() {
+		calendar.preMonth(arr);
+		//console.log("上个月的年月："+calendar.getYearAndMonth());
+		sendAjax();
+	});
+	
+	//ajax数据请求
+	function sendAjax(){
+		// 获取当前时间戳(以s为单位)
+		var currentTimestamp = Date.parse(new Date()) / 1000;
+		//console.log("当前时间戳为：" + currentTimestamp);
+		
+		// 获取上个月，或者下个月的时间戳(以s为单位) 2016-08-01 08:00:00     2016-10-01 08:00:00
+		var clickTimestamp = Date.parse(calendar.getYearAndMonth()) / 1000;
+		//console.log("点击获取的时间戳为：" + clickTimestamp);
+		
+		if(currentTimestamp > clickTimestamp){
+			//console.log("进行ajax请求，在render");	
+			$.ajax({
+	             type: "POST",
+	             url: "{:U('Sign/getMonthDate')}",
+	             data: {clickDate:calendar.getYearAndMonth()},
+	             dataType: "json",
+	             success: function(data){            
+	         		calendar.renderHtml(data.date);
+	             }
+	        });
+		}else{
+			//console.log("不进行ajax请求，直接render");
+			calendar.renderHtml("");
+		}
+	}
+	// E	
+})
+</script>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp"/>
+<title>个人中心</title>
+<link rel="stylesheet" href="{:CS_PATH}base.css" />
+</head>
+<body class="center_bd" data-flag="true">
+<div class="head"><img src="{$info.headimgurl}"/></div>
+<ul class="center_box">
+	<li>
+		<i></i>
+		<span>{$info.username}&nbsp;{$info.job_number}</span>
+	</li>
+	<li>
+		<i></i>
+		 <if condition="$info['sex'] eq 1">
+                      <span>男</span>
+                    <elseif condition="$info['sex'] eq 2"/>
+                     <span>女</span>
+                    <elseif condition="$info['sex'] eq 0"/>
+                    <span>保密</span>     
+            </if> 
+	</li>
+	<li>
+		<i></i>
+		<span>{$info.phone}</span>
+	</li>
+	<li>
+		<i></i>
+		<span>{$info.depart_name}</span>
+	</li>
+</ul>
+</body>
+<script src="{:JS_PATH}jquery-2.1.4.js" type="text/javascript" charset="utf-8"></script>
+<script src="{:JS_PATH}app.js" type="text/javascript" charset="utf-8"></script>
+</html>

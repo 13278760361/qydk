@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp"/>
+<title>通讯录</title>
+<link rel="stylesheet" href="{:CS_PATH}base.css" />
+</head>
+<body>
+<form action="{:U('Contact/userSearch')}" method="post">
+<div class="search_box">
+	<input class="search_input" type="text" required="required"   name="keyword" id="key" placeholder="搜索"/>
+	<input type="submit" value="提交" id="sub" style="display:none;"> 
+</div>
+</form>
+<div class="address_list" id="address_list">
+<volist name="depart_lists" id="vo">
+	<dl>
+		<dt>
+			<span><i></i>{$vo.depart_name}</span>
+			<em>{$vo.users_num}人</em>
+		</dt>
+		<dd>
+		    <volist name="vo['users']" id ="v">
+			<a href="tel:{$v.phone}"><p>{$v.username}</p></a>
+			</volist>
+		</dd>
+	</dl>
+</volist>	
+	<!-- <dl>
+		<dt>
+			<span><i></i>总经办</span>
+			<em>4人</em>
+		</dt>
+		<dd>
+			<a tel=":138xxxxxxxxx">总1</a>
+			<a tel=":138xxxxxxxxx">总1</a>
+			<a tel=":138xxxxxxxxx">总1</a>
+			<a tel=":138xxxxxxxxx">总1</a>
+		</dd>
+	</dl>
+	
+	<dl>
+		<dt>
+			<span><i></i>研发部</span>
+			<em>0人</em>
+		</dt>
+		<dd>
+		</dd>
+	</dl>
+	
+	<dl>
+		<dt>
+			<span><i></i>UE用户体验部</span>
+			<em>7人</em>
+		</dt>
+		<dd>
+			<a tel=":138xxxxxxxxx">吴世吉</a>
+			<a tel=":138xxxxxxxxx">高江丽</a>
+			<a tel=":138xxxxxxxxx">吴世吉</a>
+			<a tel=":138xxxxxxxxx">高江丽</a>
+		</dd>
+	</dl> -->
+</div>
+</body>
+<script src="{:JS_PATH}jquery-2.1.4.js" type="text/javascript" charset="utf-8"></script>
+<script src="{:JS_PATH}/app.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+$(function(){
+	//展开与收起
+	App.handleListToggle("#address_list");
+	$("#key").change(function(){
+           $('#sub').click();
+	})
+})
+</script>
+</html>

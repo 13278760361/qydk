@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp"/>
+<title>青云培训</title>
+<link rel="stylesheet" href="{:CS_PATH}base.css" />
+</head>
+<body class="notify_bd">
+<div class="notify_h20"></div>
+<volist name="lists" id="vo">
+	<div class="notify">
+		<h5>{$vo.title}</h5>
+		<b>{$vo.time}</b>
+		<a class="pic" href="#"><img src="{$vo.pic}"/></a>
+		<p>{$vo.v_title}</p>
+		<a class="link" href="{:U('Notice/info',array('id'=>$vo['id']))}">
+			<span class="fl">阅读全文</span>
+			<em class="fr"><i></i></em>
+		</a>
+	</div>
+</volist>	
+<!-- <div class="notify">
+	<h5>中秋放假通知</h5>
+	<b>9月6日</b>
+	<a class="pic" href="#"><img src="images/pic1.png"/></a>
+	<p>客官请留步，首先请接受我诚挚的问候！中秋佳节将至，青才信息科技预祝大家节日快乐！</p>
+	<a class="link" href="#">
+		<span class="fl">阅读全文</span>
+		<em class="fr"><i></i></em>
+	</a>
+</div> -->
+
+</body>
+<script src="{:JS_PATH}jquery-2.1.4.js" type="text/javascript" charset="utf-8"></script>
+<script src="{:JS_PATH}app.js" type="text/javascript" charset="utf-8"></script>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp"/>
+<title>详细信息</title>
+<link rel="stylesheet" href="{:CS_PATH}base.css" />
+</head>
+<body data-flag="true">
+<!--签到显示的背景图需要程序进行判断 是显示正常图 还是显示不正常图-->
+
+<!--签到时间不正常的情况-->
+<if condition="$end_time eq null">
+<div class="sign_state_spark_no"></div> 
+<else />
+<!--签到时间正常的情况-->
+<div class="sign_state_spark_ok"></div>
+</if>
+<div class="sign_state_info">
+	<div class="text">{$date}</div>
+	<div class="time">
+		<p>
+			<span>上班时间 :</span>
+			<em>{$start_time}</em>
+		</p>
+		<p>
+			<span>下班时间 :</span>
+		<!-- 	<b>请假</b>
+			<em>17:45</em> -->
+			<if condition="$end_time neq null">
+				<em>{$end_time}</em>
+				<else/>
+				 <em class="on">未打卡</em>
+			</if>
+		</p>
+	</div>
+</div>
+
+</body>
+<script src="{:JS_PATH}jquery-2.1.4.js" type="text/javascript" charset="utf-8"></script>
+<script src="{:JS_PATH}app.js" type="text/javascript" charset="utf-8"></script>
+</html>

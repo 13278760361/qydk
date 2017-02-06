@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp"/>
+<title>部门管理</title>
+<link rel="stylesheet" href="{:CS_PATH}base.css" />
+</head>
+<body class="department_bd">
+<div class="department">
+<form action="{:U('Department/userSearch')}" method="post">
+	<div class="search_box department_box">
+		<input class="search_input" type="text" name="keyword" required="required" id="key" placeholder="搜索"/>
+		<input type="submit" value="提交" id="sub" style="display:none;"> 
+	</div>
+</form>	
+	<div class="department_list" id="department_list">
+			<volist name="depart_lists" id="vo">
+				<dl>
+					<dt>
+						<span><i></i>{$vo.depart_name}</span>
+						<em><i></i></em>
+					</dt>
+					<dd>
+					    <volist name="vo['users']" id ="v">
+						<a href="{:U('RoleSign/info',array('id'=>$v['id']) )}">{$v.username}</a>
+						</volist>
+					</dd>
+				</dl>
+			</volist>	
+		<!-- <dl>
+			<dt>
+				<span><i></i>总经办</span>
+				<em><i></i></em>
+			</dt>
+			<dd>
+				<a href="javascript:;">总1</a>
+				<a href="javascript:;">总1</a>
+				<a href="javascript:;">总1</a>
+				<a href="javascript:;">总1</a>
+			</dd>
+		</dl>
+		
+		<dl>
+			<dt>
+				<span><i></i>研发部</span>
+				<em><i></i></em>
+			</dt>
+			<dd>
+			</dd>
+		</dl>
+		
+		<dl>
+			<dt>
+				<span><i></i>UE用户体验部</span>
+				<em><i></i></em>
+			</dt>
+			<dd>
+				<a href="javascript:;">吴世吉</a>
+				<a href="javascript:;">高江丽</a>
+				<a href="javascript:;">吴世吉</a>
+				<a href="javascript:;">高江丽</a>
+			</dd>
+		</dl> -->
+	</div>
+</div>
+</body>
+<script src="{:JS_PATH}jquery-2.1.4.js" type="text/javascript" charset="utf-8"></script>
+<script src="{:JS_PATH}app.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+$(function(){
+	//展开与收起
+	App.handleListToggle("#department_list");
+
+	$("#key").change(function(){
+           $('#sub').click();
+	})
+})
+</script>
+</html>

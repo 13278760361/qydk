@@ -1,0 +1,164 @@
+<link href="{:CS_PATH}pintuer.css" rel="stylesheet" type="text/css" />
+<link href="{:CS_PATH}fangcms.css" rel="stylesheet" type="text/css" />
+<script src="{:JS_PATH}jquery.min.js" type="text/javascript"></script>
+<script src="{:JS_PATH}pintuer.js" type="text/javascript"></script>
+<script src="{:JS_PATH}lib/layer/layer.js" type="text/javascript"></script>
+<script src="{:JS_PATH}lib/ueditor/ueditor.config.js"></script>
+<script src="{:JS_PATH}lib/ueditor/ueditor.all.min.js"> </script>
+<script src="{:JS_PATH}lib/ueditor/lang/zh-cn/zh-cn.js"></script>
+<script src="{:JS_PATH}jquery.easyui.min.js"></script>
+
+
+
+
+
+<div class="fangcms_box">
+	<form method="post">
+		<div class="form-group">
+			<div class="label">
+				<label for="title">
+					通知标题:</label>
+			</div>
+			<div class="field">
+				<input type="text" class="input" id="title" name="title" size="50" value="{$info['title']}" />
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="label">
+				<label for="v_title">
+					通知副标题:</label>
+			</div>
+			<div class="field">
+				<input type="text" class="input" id="v_title" name="v_title" size="50" value="{$info['v_title']}" />
+			</div>
+		</div>
+		<input type="hidden" name="iid"  value="$info['id']">
+		<div class="form-group">
+			<div class="label">
+				<label for="author">
+					作者:</label>
+			</div>
+			<div class="field">
+				<input type="text" class="input" id="author" name="author" size="50" placeholder="作者" value="{$info['author']}" />
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="label">
+				<label for="logo">封面图片<font color="red" style="font-size:10px;">[*建议上传94*40]</font></label>
+			</div>
+			<div class="field">
+				<a class="button input-file">+ 浏览文件
+					<input name="file" id="img" size="100" type="file"/></a>
+				<input type="hidden" name="img" value="{$info['pic']}">
+			</div>
+		</div>
+		<img src="{$info.pic}" width="100" height="100" class="img-border radius-small" id="img_img"  />
+
+		<div class="form-group">
+			<div class="label"><label for="content">内容</label></div>
+			<div class="field x12">
+				<script type="text/plain" id="editor" style="width:100%;height:300px;">{:strip_tags(htmlspecialchars_decode($info['content']))}</script>
+			</div>
+			<div class="form-button">
+				<button class="button" type="button" onclick="add()">
+					提交发布</button>
+			</div>
+	</form>
+</div>
+<script>
+	//实例化编辑器
+	var ue = UE.getEditor('editor',{
+		elementPathEnabled:false,
+		wordCount:false,          //是否开启字数统计
+		serverUrl:'{:U("Admin/Upload1/index/Type/content")}',
+		toolbars:[[
+			'source','bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain','forecolor', 'backcolor', 'fontsize',
+			'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', 'touppercase', 'tolowercase',
+			'link', 'unlink','imagenone', 'imageleft', 'imageright', 'imagecenter',
+			'simpleupload', 'insertimage', 'map','fullscreen'
+		]]
+	});
+	$(function () {
+		$("#img").wrap("<form id='upload'  method='post' enctype='multipart/form-data'></form>");
+		$("#img").change(function(){
+			$('#upload').form('submit', {
+				type: 'POST',
+				url: "{:U('Upload/index')}",
+				onSubmit: function(param){
+					param.Type   = 'Content/';   //图片存储路径
+				},
+				success: function(data){
+					if(data.status==0){
+						layer.open({
+							content:data.info,
+							btn:['好的'],
+							yes:function(){
+								layer.closeAll()
+							}
+						})
+					}else{
+						$("#img_img").attr('src',data);
+
+						$("input[name='img']").val(data);
+
+						layer.closeAll()
+					}
+				}
+			});
+		});
+
+	});
+	//创建节点
+	function add(){
+		var title=$("input[name='title']");
+		var v_title=$("input[name='v_title']");
+		var author=$("input[name='author']");
+		var img =$("input[name='img']");
+		var id =$("input[name='iid']");
+		var content=ue.getContent();
+		if (title.val()=='') {
+			layer.tips('非空*', title);
+			title.focus();
+			return false
+		}
+		if (v_title.val()=='') {
+			layer.tips('非空*', v_title);
+			title.focus();
+			return false
+		}
+		if (author.val()=='') {
+			layer.tips('非空*', author);
+			author.focus();
+			return false
+		}
+		$('.button').attr("disabled","disabled");//防止重复提交
+		$.post("{:U('Content/edit')}",{
+			title:title.val(),
+			v_title:v_title.val(),
+			author:author.val(),
+			pic:img.val(),
+			'id':{$_GET['id']},
+			content:content,
+		},function(ret){
+			if(ret.status==1){
+				parent.layer.msg(ret.info, {
+					offset: 200,
+					shift: 1,
+					time: 800 //2秒关闭（如果不配置，默认是3秒）
+				}, function(){
+					parent.location.reload()
+					parent.layer.closeAll()
+				});
+			}else{
+				$('.button').removeAttr("disabled","disabled");//防止重复提交
+
+				layer.msg(ret.info, {
+					offset: 200,
+					shift: 2,
+					time: 800 //2秒关闭（如果不配置，默认是3秒）
+				});
+			}
+		})
+	}
+</script>
+

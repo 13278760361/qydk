@@ -1,0 +1,138 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-siteapp"/>
+<title>详细信息</title>
+<link rel="stylesheet" href="{:CS_PATH}base.css" />
+</head>
+<body data-flag="true">
+<!--签到显示的背景图需要程序进行判断 是显示正常图 还是显示不正常图-->
+
+<!--签到时间不正常的情况-->
+<!--<div id="sign_state_pic" class="sign_state_spark_no"></div> -->
+<!--签到时间正常的情况-->
+<!--<div id="sign_state_pic" class="sign_state_spark_ok"></div> -->
+
+<!--这里的class需要程序判断-->
+<div id="sign_state_pic" class="<if condition="$signLists[$todate]['end_time'] eq null">sign_state_spark_no<else/>sign_state_spark_ok</if>"></div>
+
+<div class="sign_state_info">
+	<div class="text">
+		<span class="text_prev"><</span>
+		<span class="text_date">{$date}</span>
+		<span class="text_next active">></span>
+	</div>
+	<div class="time_wrap">
+		<div class="time_list">
+		<volist name="signLists" id="vo">
+		   <!--data-flag="1" 正常 0 不正常 -->
+			<div class="time" data-flag="{$vo.status}">
+				<p>
+					<span>上班时间 :</span>
+					<if condition="$vo['start_time'] eq null">
+						<em class="on">未打卡</em>
+						<else/>
+						<em>{$vo.start_time}</em>
+					</if>
+				</p>
+				<p>
+					<span>下班时间 :</span>
+				    <if condition="$vo['end_time'] eq null">
+						 <em class="on">未打卡</em>
+						<else/>
+						<em>{$vo.end_time}</em>
+					</if>
+				</p>
+			</div>
+		
+		</volist>	
+		</div>
+	</div>
+</div>
+</body>
+<script src="{:JS_PATH}jquery-2.1.4.js" type="text/javascript" charset="utf-8"></script>
+<script src="{:JS_PATH}app.js" type="text/javascript" charset="utf-8"></script>
+<script src="{:JS_PATH}calendar.js" type="text/javascript" charset="utf-8"></script>
+<script>
+var Sign = function(){
+	//向左向右点击展示本月打开信息
+	var setShowSignList = function(){
+		var count = 0;
+		var $state = $("#sign_state_pic");
+		var $list = $(".time_list"),
+		$textdate = $(".text_date");
+		$prev = $(".text_prev"),
+		$next = $(".text_next"),
+		$item = $(".time"),
+		len = $list.find(".time").size(),
+		index = len,
+		w = $(window).width();
+		//初始化
+		$item .css({width:w});
+		$list.css({width:(len+1)*w,left:-(len-1)*w});
+		//下一天
+		$next.on("click",function(){	
+			if(index == len){
+				$(this).addClass("active");
+				$prev.removeClass("active");
+				return;
+			}	
+			if ($(':animated').length === 0) {
+				$prev.removeClass("active");
+				var left =parseInt($list.css("left"));
+				$list.stop().animate({left:-w+left},100,function(){
+					index++;
+					count++;
+					$textdate.html(calendar.getJsonDate(count).str);
+					var flag = $list.find(".time").eq(calendar.getJsonDate(count).day-1).attr("data-flag");
+					if(flag==1){
+						$state.removeClass("sign_state_spark_no").addClass("sign_state_spark_ok");
+					}else{
+						$state.removeClass("sign_state_spark_ok").addClass("sign_state_spark_no");
+					}
+				});
+			}
+		});
+		//上一天
+		$prev.on("click",function(){
+			if(index==1){
+				$(this).addClass("active");
+				$next.removeClass("active");
+				return;
+			}
+			if ($(':animated').length === 0) {
+			$next.removeClass("active");
+				var left =parseInt($list.css("left"));
+				$list.stop().animate({left:w+left},100,function(){
+					index--;
+					count--;
+					$textdate.html(calendar.getJsonDate(count).str);
+					var flag = $list.find(".time").eq(calendar.getJsonDate(count).day-1).attr("data-flag");
+					if(flag==1){
+						$state.removeClass("sign_state_spark_no").addClass("sign_state_spark_ok");
+					}else{
+						$state.removeClass("sign_state_spark_ok").addClass("sign_state_spark_no");
+					}
+				});
+			}
+		});	
+	}
+	return{
+		init:function(){
+			setShowSignList();
+		}
+	}
+}();
+
+//load
+$(function(){
+	Sign.init();
+})
+</script>
+</html>
